@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">W&amp;T</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="w_t"><![CDATA[W&T]]></string>
+    <string name="welcome_to_w_t"><![CDATA[WELCOME TO W&T]]></string>
+    <string name="login_with_your_w_t_account"><![CDATA[Login with your W&T account.]]></string>
+    <string name="sing_up_for_w_t_membership"><![CDATA[Sing Up For W&T Membership.]]></string>
 </resources>
