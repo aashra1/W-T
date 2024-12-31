@@ -9,10 +9,35 @@
     tools:context=".ui.fragment.AccountFragment">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="332dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:outlineAmbientShadowColor="@color/bgrey">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="ACCOUNT"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:gravity="center" />
+
+        <ImageButton
+            android:layout_width="62dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="330dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/baseline_settings_24"
+            android:scaleType="fitCenter"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="352dp"
         android:layout_height="200dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="40dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="30dp"
         app:cardCornerRadius="10dp"
         android:backgroundTint="@color/bgrey">
 
@@ -74,7 +99,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="5dp"
         android:backgroundTint="@color/white"/>
 
     <!-- Add a horizontal line here -->
@@ -91,7 +116,7 @@
         android:layout_marginTop="20dp"
         android:text="HELP"
         android:textSize="12sp"
-        android:layout_marginLeft="36dp"/>
+        android:layout_marginLeft="31dp"/>
 
     <Button
         android:id="@+id/faqBtn"
@@ -104,7 +129,7 @@
         android:textStyle="bold"
         android:backgroundTint="@color/white"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="5dp" />
 
     <Button
         android:id="@+id/paymentBtn"
@@ -116,7 +141,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:backgroundTint="@color/white"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="5dp" />
 
     <Button
         android:id="@+id/contactBtn"
@@ -128,7 +153,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:backgroundTint="@color/white"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="5dp" />
 
     <!-- Add a horizontal line here -->
     <View
