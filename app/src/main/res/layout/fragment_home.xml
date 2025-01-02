@@ -1,14 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".ui.fragment.HomeFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        android:background="@color/white">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:titleTextColor="@color/black">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="W&amp;T"
+                    android:textSize="50sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+
+                <ImageButton
+                    android:id="@+id/toolbar_star"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@null"
+                    android:contentDescription="Wishlist Icon"
+                    android:src="@drawable/baseline_star_border_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/toolbar_search"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/toolbar_search"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/baseline_search_24"
+                    android:background="@null"
+                    android:contentDescription="Search Icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:tabIndicatorColor="@color/black"
+            app:tabSelectedTextColor="@color/black"
+            app:tabTextColor="@color/black">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_featured"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FEATURED"
+                android:textStyle="bold"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_new_arrivals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NEW ARRIVALS"
+                android:textStyle="bold"/>
+        </com.google.android.material.tabs.TabLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="-16dp"
+            android:layout_marginTop="-4dp"
+            android:layout_marginEnd="-16dp"
+            android:background="@color/grey" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="-30dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/shoe_image" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NEW ARRIVALS"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="EXPLORE THE LATEST DROP OF CLOTHINGS FEATURING RICK OWENS, CHROME HEARTS, EVISU, THUG CLUB AND MORE."
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp" />
+
+                <Button
+                    android:id="@+id/shop_now_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SHOP NOW"
+                    android:backgroundTint="@color/black"
+                    android:textColor="@color/white"
+                    android:layout_gravity="start" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="-16dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="-16dp"
+                    android:background="@color/grey" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FEATURED BRANDS"
+                    android:textStyle="bold"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_horizontal">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/logo1"
+                        app:strokeColor="@color/grey"
+                        app:strokeWidth="2dp"
+                        app:shapeAppearanceOverlay="@style/roundedImageView" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/logo2"
+                        app:strokeColor="@color/grey"
+                        app:strokeWidth="2dp"
+                        app:shapeAppearanceOverlay="@style/roundedImageView" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/logo3"
+                        app:strokeColor="@color/grey"
+                        app:strokeWidth="2dp"
+                        app:shapeAppearanceOverlay="@style/roundedImageView" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/logo4"
+                        app:strokeColor="@color/grey"
+                        app:strokeWidth="2dp"
+                        app:shapeAppearanceOverlay="@style/roundedImageView" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </FrameLayout>
