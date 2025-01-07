@@ -67,17 +67,21 @@
             app:tabTextColor="@color/black">
 
     <com.google.android.material.tabs.TabItem
+        android:id="@+id/tab_featured"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Monday" />
+        android:text="FEATURED"
+        android:textStyle="bold"/>
 
     <com.google.android.material.tabs.TabItem
+        android:id="@+id/tab_new_arrivals"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tuesday" />
-        </com.google.android.material.tabs.TabLayout>
+        android:text="NEW ARRIVALS"
+        android:textStyle="bold"/>
+</com.google.android.material.tabs.TabLayout>
 
-    <View
+<View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginStart="-16dp"
