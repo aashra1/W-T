@@ -13,6 +13,7 @@ import com.example.wt.R
 import com.example.wt.databinding.ActivityLoginBinding
 import com.example.wt.login.fragment.LoginFragment
 
+
 class LoginActivity : AppCompatActivity() {
 
     lateinit var binding : ActivityLoginBinding
