@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:background="@color/white"
+tools:context=".ui.fragment.FeaturedFragment">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="-30dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/shoe_image" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NEW ARRIVALS"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EXPLORE THE LATEST DROP OF CLOTHINGS FEATURING RICK OWENS, CHROME HEARTS, EVISU, THUG CLUB AND MORE."
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/shop_now_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SHOP NOW"
+                android:backgroundTint="@color/black"
+                android:textColor="@color/white"
+                android:layout_gravity="start" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="-16dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="-16dp"
+                android:background="@color/grey" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FEATURED BRANDS"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/logo1"
+                    app:strokeColor="@color/grey"
+                    app:strokeWidth="2dp"
+                    app:shapeAppearanceOverlay="@style/roundedImageView" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/logo2"
+                    app:strokeColor="@color/grey"
+                    app:strokeWidth="2dp"
+                    app:shapeAppearanceOverlay="@style/roundedImageView" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/logo3"
+                    app:strokeColor="@color/grey"
+                    app:strokeWidth="2dp"
+                    app:shapeAppearanceOverlay="@style/roundedImageView" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/logo4"
+                    app:strokeColor="@color/grey"
+                    app:strokeWidth="2dp"
+                    app:shapeAppearanceOverlay="@style/roundedImageView" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+</FrameLayout>

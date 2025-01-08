@@ -32,6 +32,7 @@ class NavigationActivity : AppCompatActivity() {
         binding = ActivityNavigationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         replaceFragment(HomeFragment())
 
         binding.bottomNavigationView.setOnItemSelectedListener { menu ->
