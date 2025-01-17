@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment : Fragment) {
+    fun replaceFragment(fragment : Fragment) {
         val fragmentManger : FragmentManager = supportFragmentManager
         val fragmentTransaction : FragmentTransaction = fragmentManger.beginTransaction()
         fragmentTransaction.replace(R.id.frameLayout, fragment)
