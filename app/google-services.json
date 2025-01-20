@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "903972757608",
+    "firebase_url": "https://w-and-t-default-rtdb.firebaseio.com",
+    "project_id": "w-and-t",
+    "storage_bucket": "w-and-t.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903972757608:android:cb83e96323417a967b1bdd",
+        "android_client_info": {
+          "package_name": "com.example.wt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa1iSyIUqaaUQcW75KDCvDlrqX34an_2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
