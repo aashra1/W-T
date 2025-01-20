@@ -15,7 +15,7 @@ class UserViewModel(val repo : UserRepository) {
         return repo.getCurrentUser()
     }
 
-    fun addUserToDB(userid:String, model: UserModel, callback: (Boolean, String) -> Unit){
-        return repo.addUserToDB(userid,model,callback)
+    fun addUserToDB(userId:String, userModel: UserModel, callback: (Boolean, String) -> Unit){
+        return repo.addUserToDB(userId,userModel,callback)
     }
 }

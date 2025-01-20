@@ -7,12 +7,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class UserRepositoryImpl:UserRepository {
-        var database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    var database: FirebaseDatabase = FirebaseDatabase.getInstance()
 
-        var ref: DatabaseReference = database.reference
-            .child("users")
+    var ref: DatabaseReference = database.reference.child("users")
 
-        var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    var auth: FirebaseAuth = FirebaseAuth.getInstance()
 
 
     override fun signup(email:String, password:String, callback:(Boolean, String,String)->Unit) {
@@ -34,13 +33,13 @@ class UserRepositoryImpl:UserRepository {
     }
 
     override fun addUserToDB(
-        userid: String,
-        model: UserModel,
+        userId: String,
+        userModel: UserModel,
         callback: (Boolean, String) -> Unit
     ) {
-        ref.child(model.userId).setValue(UserModel).addOnCompleteListener {
+        ref.child(userId).setValue(userModel).addOnCompleteListener {
             if(it.isSuccessful){
-                callback(true,"Datas Added to Database")
+                callback(true,"Data Added to Database")
             }
             else{
                 callback(false,it.exception?.message.toString())

@@ -30,29 +30,36 @@ class SignupFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val repo=UserRepositoryImpl()
         userViewModel= UserViewModel(repo)
 
         var currentUser = userViewModel.getCurrentUser().toString()
         binding.signInbutton.setOnClickListener{
-            userViewModel.signup(binding.emailInput2.text.toString(),binding.passwordInput2.text.toString()){
-                success,messege,id->
+
+            var name = binding.nameInput.text.toString()
+            var email = binding.emailInput2.text.toString()
+            var password = binding.passwordInput2.text.toString()
+
+            userViewModel.signup(email,password){
+                    success,message,id->
                 if(success){
-                    val model=UserModel(
+                    val userModel=UserModel(
                         id.toString(),
-                        binding.nameInput.text.toString()
+                        name,
+                        email
                     )
-                    userViewModel.addUserToDB(id,model){
-                        success,message->
+                    userViewModel.addUserToDB(id,userModel){
+                            success,message->
                         if(success){
-                            Toast.makeText(requireContext(),messege,Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(),message,Toast.LENGTH_SHORT).show()
                         }else{
-                            Toast.makeText(requireContext(),messege,Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(),message,Toast.LENGTH_SHORT).show()
                         }
                     }
                 }else
                 {
-                    Toast.makeText(requireContext(),messege,Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),message,Toast.LENGTH_SHORT).show()
                 }
 
             }
