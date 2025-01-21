@@ -6,8 +6,10 @@ import android.os.Parcelable
 data class UserModel (
     var userId:String="",
     var name : String ="",
+    var email : String ="",
 ):Parcelable{
     constructor(parcel: Parcel) : this(
+        parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readString()?:"",
     ) {
@@ -16,6 +18,7 @@ data class UserModel (
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(userId)
         parcel.writeString(name)
+        parcel.writeString(email)
     }
 
     override fun describeContents(): Int {
