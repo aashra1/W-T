@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import com.example.wt.R
 import com.example.wt.databinding.FragmentLoginBinding
 import com.example.wt.viewModel.UserViewModel
@@ -36,6 +37,16 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.loginBtn.setOnClickListener {
+            val email = binding.emailInput1.text.toString()
+            val password = binding.passwordInput1.text.toString()
+
+            if (validateInputs(email, password)) {
+                // Proceed with login or API call
+                Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         val signupButton: Button = view.findViewById(R.id.signupBtn)
         signupButton.setOnClickListener {
             // Replace the current fragment with SignupFragment
@@ -44,6 +55,30 @@ class LoginFragment : Fragment() {
                 .addToBackStack(null) // Optional: Adds this transaction to the back stack
                 .commit()
         }
+    }
+
+    private fun validateInputs(email: String, password: String): Boolean {
+        if (email.isEmpty()) {
+            Toast.makeText(context, "Email is required!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(context, "Enter a valid email address!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (password.isEmpty()) {
+            Toast.makeText(context, "Password is required!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (password.length < 6) {
+            Toast.makeText(context, "Password must be at least 6 characters long!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
     }
 
 
