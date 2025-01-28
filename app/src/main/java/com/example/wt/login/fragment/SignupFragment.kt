@@ -16,7 +16,6 @@ import com.example.wt.repository.UserRepositoryImpl
 
 class SignupFragment : Fragment() {
     private lateinit var binding: FragmentSignupBinding
-
     private lateinit var userViewModel: UserViewModel
 
     override fun onCreateView(
@@ -24,45 +23,75 @@ class SignupFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding=FragmentSignupBinding.inflate(inflater,container,false)
+        binding = FragmentSignupBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repo=UserRepositoryImpl()
-        userViewModel= UserViewModel(repo)
+        val repo = UserRepositoryImpl()
+        userViewModel = UserViewModel(repo)
 
-        var currentUser = userViewModel.getCurrentUser().toString()
-        binding.signInbutton.setOnClickListener{
+        binding.signInbutton.setOnClickListener {
+            val name = binding.nameInput.text.toString()
+            val email = binding.emailInput2.text.toString()
+            val password = binding.passwordInput2.text.toString()
+            val confirmPassword = binding.confirmpwInput.text.toString()
 
-            var name = binding.nameInput.text.toString()
-            var email = binding.emailInput2.text.toString()
-            var password = binding.passwordInput2.text.toString()
-
-            userViewModel.signup(email,password){
-                    success,message,id->
-                if(success){
-                    val userModel=UserModel(
-                        id.toString(),
-                        name,
-                        email
-                    )
-                    userViewModel.addUserToDB(id,userModel){
-                            success,message->
-                        if(success){
-                            Toast.makeText(requireContext(),message,Toast.LENGTH_SHORT).show()
-                        }else{
-                            Toast.makeText(requireContext(),message,Toast.LENGTH_SHORT).show()
+            if (validateInputs(name, email, password, confirmPassword)) {
+                userViewModel.signup(email, password) { success, message, id ->
+                    if (success) {
+                        val userModel = UserModel(id.toString(), name, email)
+                        userViewModel.addUserToDB(id, userModel) { success, message ->
+                            if (success) {
+                                Toast.makeText(requireContext(), "Signup successful", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(requireContext(), LoginActivity::class.java)
+                                startActivity(intent)
+                                requireActivity().finish()
+                            } else {
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                            }
                         }
+                    } else {
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     }
-                }else
-                {
-                    Toast.makeText(requireContext(),message,Toast.LENGTH_SHORT).show()
                 }
-
             }
         }
+    }
+
+    private fun validateInputs(name: String, email: String, password: String, confirmPassword: String): Boolean {
+        if (name.isEmpty()) {
+            Toast.makeText(context, "Name is required!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (email.isEmpty()) {
+            Toast.makeText(context, "Email is required!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(context, "Enter a valid email address!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (password.isEmpty()) {
+            Toast.makeText(context, "Password cannot be empty", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (password.length < 6) {
+            Toast.makeText(context, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (confirmPassword.isEmpty()) {
+            Toast.makeText(context, "Confirm password cannot be empty", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (password != confirmPassword) {
+            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
     }
 }
