@@ -75,9 +75,23 @@ class SignupFragment : Fragment() {
             Toast.makeText(context, "Enter a valid email address!", Toast.LENGTH_SHORT).show()
             return false
         }
+        if (password.isEmpty()) {
+            Toast.makeText(context, "Password cannot be empty", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (password.length < 6) {
+            Toast.makeText(context, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+            return false
+        }
 
-
-
+        if (confirmPassword.isEmpty()) {
+            Toast.makeText(context, "Confirm password cannot be empty", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (password != confirmPassword) {
+            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+            return false
+        }
         return true
     }
 }
