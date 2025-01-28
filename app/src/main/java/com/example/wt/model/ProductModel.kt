@@ -1,4 +1,4 @@
-package com.example.wt.model;
+package com.example.wt.model
 
-public class ProductModel {
+class ProductModel {
 }
