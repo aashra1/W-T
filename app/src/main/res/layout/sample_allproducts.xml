@@ -7,12 +7,50 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:cardCornerRadius="20dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="200dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/displayImage"
+                android:layout_width="190dp"
+                android:layout_height="200dp"
+                android:src="@drawable/tc3"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/displayProdName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Product Name"
+                android:textStyle="bold"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/displayDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Product Description"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/displayPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
+
+
 
 
     </androidx.cardview.widget.CardView>
