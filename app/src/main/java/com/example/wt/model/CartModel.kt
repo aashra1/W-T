@@ -10,5 +10,6 @@ data class CartModel(
     var updateCart : String = "",
     var getallcart : String = "",
     var getcartId : String = "",
+
 ) {
 }
