@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import com.example.wt.R
 import com.example.wt.databinding.FragmentLoginBinding
 import com.example.wt.repository.UserRepositoryImpl
 import com.example.wt.ui.activity.NavigationActivity
+import com.example.wt.ui.fragment.AccountFragment
 import com.example.wt.viewModel.UserViewModel
 
 // TODO: Rename parameter arguments, choose names that match
@@ -42,6 +45,14 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val btnBack: ImageButton = requireActivity().findViewById(R.id.btnBack)
+
+        btnBack.setOnClickListener {
+            val intent = Intent(activity, NavigationActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        }
+
         binding.loginBtn.setOnClickListener {
             val email = binding.emailInput1.text.toString()
             val password = binding.passwordInput1.text.toString()
@@ -64,36 +75,36 @@ class LoginFragment : Fragment() {
     var repo = UserRepositoryImpl()
 
 
-        private fun validateInputs(email: String, password: String): Boolean {
-            if (email.isEmpty()) {
-                Toast.makeText(context, "Email is required!", Toast.LENGTH_SHORT).show()
-                return false
-            }
-
-            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(context, "Enter a valid email address!", Toast.LENGTH_SHORT).show()
-                return false
-            }
-
-            if (password.isEmpty()) {
-                Toast.makeText(context, "Password is required!", Toast.LENGTH_SHORT).show()
-                return false
-            }
-
-            if (password.length < 6) {
-                Toast.makeText(
-                    context,
-                    "Password must be at least 6 characters long!",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return false
-            }
-
-            return true
+    private fun validateInputs(email: String, password: String): Boolean {
+        if (email.isEmpty()) {
+            Toast.makeText(context, "Email is required!", Toast.LENGTH_SHORT).show()
+            return false
         }
 
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(context, "Enter a valid email address!", Toast.LENGTH_SHORT).show()
+            return false
+        }
 
-        companion object {
+        if (password.isEmpty()) {
+            Toast.makeText(context, "Password is required!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (password.length < 6) {
+            Toast.makeText(
+                context,
+                "Password must be at least 6 characters long!",
+                Toast.LENGTH_SHORT
+            ).show()
+            return false
+        }
+
+        return true
+    }
+
+
+    companion object {
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -123,6 +134,7 @@ class LoginFragment : Fragment() {
                     }
                 }
 
+
                 binding.signupBtn.setOnClickListener {
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.frameLayout, SignupFragment())
@@ -131,4 +143,4 @@ class LoginFragment : Fragment() {
                 }
             }
     }
-    }
+}
