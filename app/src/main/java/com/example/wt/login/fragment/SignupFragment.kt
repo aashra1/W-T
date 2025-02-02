@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
+import com.example.wt.R
 import com.example.wt.viewModel.UserViewModel
 import com.example.wt.databinding.FragmentSignupBinding
 import com.example.wt.login.activity.LoginActivity
@@ -32,6 +34,15 @@ class SignupFragment : Fragment() {
 
         val repo = UserRepositoryImpl()
         userViewModel = UserViewModel(repo)
+
+        val btnBack: ImageButton = requireActivity().findViewById(R.id.btnBack)
+
+        btnBack.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, LoginFragment())
+                .addToBackStack(null)
+                .commit()
+        }
 
         binding.signInbutton.setOnClickListener {
             val name = binding.nameInput.text.toString()
