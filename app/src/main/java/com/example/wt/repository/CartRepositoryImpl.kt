@@ -1,34 +1,90 @@
 package com.example.wt.repository
 
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.example.wt.model.CartModel
+import com.google.firebase.database.*
 
-class CartRepoistoryImpl : CartRepository {
+class CartRepositoryImpl : CartRepository {
 
-    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    val ref: DatabaseReference = database.reference.child("cart")
+    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val cartRef: DatabaseReference = database.reference.child("carts")
 
-    override fun addToCart() {
-        TODO("Not yet implemented")
+    override fun addToCart(cartModel: CartModel, callback: (Boolean, String) -> Unit) {
+        val cartId = cartRef.push().key ?: return callback(false, "Failed to generate cart ID")
+        cartModel.cartId = cartId
+
+        cartRef.child(cartId).setValue(cartModel).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                callback(true, "Item added to cart successfully")
+            } else {
+                callback(false, task.exception?.message ?: "Error adding item to cart")
+            }
+        }
     }
 
-    override fun removeAllCart() {
-        TODO("Not yet implemented")
+    override fun deleteCart(cartId: String, callback: (Boolean, String) -> Unit) {
+        cartRef.child(cartId).removeValue().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                callback(true, "Item removed from cart successfully")
+            } else {
+                callback(false, task.exception?.message ?: "Error removing item from cart")
+            }
+        }
     }
 
-    override fun removeCartBYId() {
-        TODO("Not yet implemented")
+    override fun updateCart(
+        cartId: String,
+        data: MutableMap<String, Any>,
+        callback: (Boolean, String) -> Unit
+    ) {
+        cartRef.child(cartId).updateChildren(data).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                callback(true, "Cart updated successfully")
+            } else {
+                callback(false, task.exception?.message ?: "Error updating cart")
+            }
+        }
     }
 
-    override fun updateCart() {
-        TODO("Not yet implemented")
+
+    override fun getCartById(cartId: String, callback: (CartModel?, Boolean, String) -> Unit) {
+        cartRef.child(cartId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val cartModel = snapshot.getValue(CartModel::class.java)
+                    callback(cartModel, true, "Cart item fetched successfully")
+                } else {
+                    callback(null, false, "Cart item not found")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(null, false, error.message)
+            }
+        })
     }
 
-    override fun getCartById() {
-        TODO("Not yet implemented")
-    }
+    override fun getAllCart(callback: (List<CartModel>?, Boolean, String) -> Unit) {
+        cartRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val cartList = mutableListOf<CartModel>()
+                if (snapshot.exists()) {
+                    for (cartSnapshot in snapshot.children) {
+                        val cartItem = cartSnapshot.getValue(CartModel::class.java)
+                        if (cartItem != null) {
+                            cartList.add(cartItem)
+                        }
+                    }
+                    callback(cartList, true, "All cart items fetched successfully")
+                } else {
+                    callback(emptyList(), false, "No items found in the cart")
+                }
+            }
 
-    override fun getAllCart() {
-        TODO("Not yet implemented")
+            override fun onCancelled(error: DatabaseError) {
+                callback(null, false, error.message)
+            }
+        })
     }
 }
+
+

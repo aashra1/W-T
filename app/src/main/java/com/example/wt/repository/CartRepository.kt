@@ -1,17 +1,33 @@
 package com.example.wt.repository
 
+import com.example.wt.model.CartModel
+
 
 interface CartRepository {
 
-    fun addToCart()
+    fun addToCart(
+        cartModel: CartModel,
+        callback: (Boolean, String) -> Unit
 
-    fun removeAllCart()
+    )
 
-    fun removeCartBYId()
+    fun deleteCart(
+        cartId: String,
+        callback: (Boolean, String) -> Unit
+    )
 
-    fun updateCart()
+    fun updateCart(
+        cartId: String,
+        data: MutableMap<String, Any>,
+        callback: (Boolean, String) -> Unit
+    )
 
-    fun getCartById()
+    fun getCartById(
+        cartId: String,
+        callback: (CartModel?, Boolean, String) -> Unit
+    )
 
-    fun getAllCart()
+    fun getAllCart(
+        callback: (List<CartModel>?, Boolean, String) -> Unit
+    )
 }
