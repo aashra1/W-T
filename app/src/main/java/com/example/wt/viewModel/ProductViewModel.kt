@@ -1,5 +1,7 @@
 package com.example.wt.viewModel
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import com.example.wt.model.ProductModel
 import com.example.wt.repository.ProductRepository
@@ -25,7 +27,7 @@ class ProductViewModel(val repo : ProductRepository) {
         productId: String,
         callback: (Boolean, String) -> Unit
     ){
-        repo.deleteProduct(productId,callback)
+        repo.deleteProduct(productId,callback )
     }
 
 
@@ -54,6 +56,10 @@ class ProductViewModel(val repo : ProductRepository) {
                 _allProducts.value = products
             }
         }
+    }
+
+    fun uploadImage(context: Context, imageUri: Uri, callback: (String?) -> Unit){
+        repo.uploadImage(context, imageUri, callback)
     }
 
 }
