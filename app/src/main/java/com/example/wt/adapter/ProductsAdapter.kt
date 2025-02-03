@@ -9,6 +9,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wt.R
 import com.example.wt.model.ProductModel
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import java.lang.Exception
 
 class ProductsAdapter(
     var context: Context,
@@ -30,7 +33,19 @@ class ProductsAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductsAdapter.ProductViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.pName.text = data[position].productName
+        holder.pDesc.text = data[position].productDesc
+        holder.pPrice.text = data[position].price.toString()
+
+        Picasso.get().load(data[position].productImage).into(holder.pImage,object: Callback {
+            override fun onSuccess() {
+                // holder.loading.visibility = View.GONE
+            }
+
+            override fun onError(e: Exception?) {
+
+            }
+        })
     }
 
     override fun getItemCount(): Int {
