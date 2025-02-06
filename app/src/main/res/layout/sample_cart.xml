@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/product"
+                android:layout_width="140dp"
+                android:layout_height="160dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/placeholder" />
+
+            <TextView
+                android:id="@+id/lblbrand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:text="Brand Name"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@+id/product"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/lblProdName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Product Name"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@+id/product"
+                app:layout_constraintTop_toBottomOf="@+id/lblbrand" />
+
+            <TextView
+                android:id="@+id/txtsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Size: "
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@+id/product"
+                app:layout_constraintTop_toBottomOf="@+id/lblProdName" />
+
+            <TextView
+                android:id="@+id/lblsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="10dp"
+                android:text="M"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@+id/txtsize"
+                app:layout_constraintTop_toBottomOf="@+id/lblProdName" />
+
+            <TextView
+                android:id="@+id/txtProdid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="PRODUCT ID: "
+                android:textAlignment="center"
+                android:textColor="@color/grey"
+                app:layout_constraintStart_toEndOf="@+id/product"
+                app:layout_constraintTop_toBottomOf="@+id/txtsize" />
+
+            <TextView
+                android:id="@+id/lblProdId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="10dp"
+                android:text="PRODUCT ID: "
+                android:textAlignment="center"
+                android:textColor="@color/grey"
+                app:layout_constraintStart_toEndOf="@+id/txtProdid"
+                app:layout_constraintTop_toBottomOf="@+id/txtsize" />
+
+            <Spinner
+                android:id="@+id/QuantitySpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="12dp"
+                android:outlineAmbientShadowColor="@color/black"
+                app:layout_constraintStart_toEndOf="@+id/product"
+                app:layout_constraintTop_toBottomOf="@+id/txtProdid" />
+
+            <TextView
+                android:id="@+id/lblprice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
+                android:text="Price"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lblProdId" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
