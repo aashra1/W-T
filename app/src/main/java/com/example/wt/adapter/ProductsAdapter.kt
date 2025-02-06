@@ -19,8 +19,8 @@ class ProductsAdapter(
 ) : RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
     class ProductViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         val pImage : ImageView = itemView.findViewById(R.id.displayImage)
+        val bName : TextView = itemView.findViewById(R.id.displayBrandName)
         val pName : TextView = itemView.findViewById(R.id.displayProdName)
-        val pDesc : TextView = itemView.findViewById(R.id.displayDesc)
         val pPrice : TextView = itemView.findViewById(R.id.displayPrice)
     }
 
@@ -33,8 +33,8 @@ class ProductsAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductsAdapter.ProductViewHolder, position: Int) {
+        holder.bName.text = data[position].brandName
         holder.pName.text = data[position].productName
-        holder.pDesc.text = data[position].productDesc
         holder.pPrice.text = data[position].price.toString()
 
         Picasso.get().load(data[position].productImage).into(holder.pImage,object: Callback {
