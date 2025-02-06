@@ -4,13 +4,16 @@ import android.icu.text.DecimalFormat
 import android.media.Image
 import android.os.Parcel
 import android.os.Parcelable
+import android.widget.Spinner
 
 data class ProductModel(
     var productId : String = "",
     var productImage : String = "",
+    var brandName : String = "",
     var productName : String = "",
-    var productDesc : String = "",
-    var price : Int = 0
+    var price : Int = 0,
+    var size : String = "",
+    var quantity : Int = 0
 ) : Parcelable  {
     constructor(parcel: Parcel) : this(
         parcel.readString()?:"",
@@ -18,6 +21,8 @@ data class ProductModel(
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readInt()?:0,
+        parcel.readString()?:"",
+        parcel.readInt()?:0
     )
 
     override fun describeContents(): Int {
@@ -27,9 +32,11 @@ data class ProductModel(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(productId)
         parcel.writeString(productImage)
+        parcel.writeString(brandName)
         parcel.writeString(productName)
-        parcel.writeString(productDesc)
         parcel.writeInt(price)
+        parcel.writeString(size)
+        parcel.writeInt(quantity)
     }
 
     companion object CREATOR : Parcelable.Creator<ProductModel> {

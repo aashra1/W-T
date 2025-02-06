@@ -25,18 +25,18 @@
                 android:scaleType="centerCrop"/>
 
             <TextView
-                android:id="@+id/displayProdName"
+                android:id="@+id/displayBrandName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Product Name"
+                android:text="Brand Name"
                 android:textStyle="bold"
                 android:textAlignment="center"/>
 
             <TextView
-                android:id="@+id/displayDesc"
+                android:id="@+id/displayProdName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Product Description"
+                android:text="Product Name"
                 android:layout_marginTop="10dp"
                 android:textAlignment="center"/>
 
