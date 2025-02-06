@@ -1,5 +1,6 @@
 package com.example.wt.ui.activity
 
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
@@ -31,6 +32,12 @@ class AdminActivity : AppCompatActivity() {
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
+
+        /* binding.floatingActionButton.setOnClickListener {
+            var intent = Intent(this@AdminActivity,
+                AddProductActivity::class.java)
+            startActivity(intent)
+        } */
 
 
         // Add spacing between items
