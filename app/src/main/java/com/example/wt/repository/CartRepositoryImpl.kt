@@ -31,6 +31,20 @@ class CartRepositoryImpl : CartRepository {
         }
     }
 
+    override fun deleteProductInCart(
+        cartId: String,
+        productId: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        cartRef.child(cartId).removeValue().addOnCompleteListener {
+            if(it.isSuccessful){
+                callback(true,"Product Removed from Cart successfully")
+            } else{
+                callback(false,it.exception?.message?:"Unknown error")
+            }
+        }
+    }
+
     override fun updateCart(
         cartId: String,
         data: MutableMap<String, Any>,
