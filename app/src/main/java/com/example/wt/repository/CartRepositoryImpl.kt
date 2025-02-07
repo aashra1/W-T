@@ -21,12 +21,28 @@ class CartRepositoryImpl : CartRepository {
         }
     }
 
+
+
     override fun deleteCart(cartId: String, callback: (Boolean, String) -> Unit) {
         cartRef.child(cartId).removeValue().addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 callback(true, "Item removed from cart successfully")
             } else {
                 callback(false, task.exception?.message ?: "Error removing item from cart")
+            }
+        }
+    }
+
+    override fun deleteProductInCart(
+        cartId: String,
+        productId: String,
+        callback: (Boolean, String) -> Unit
+    ) {
+        cartRef.child(cartId).removeValue().addOnCompleteListener {
+            if(it.isSuccessful){
+                callback(true,"Product Removed from Cart successfully")
+            } else{
+                callback(false,it.exception?.message?:"Unknown error")
             }
         }
     }

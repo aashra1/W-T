@@ -16,11 +16,19 @@ interface CartRepository {
         callback: (Boolean, String) -> Unit
     )
 
+    fun deleteProductInCart(
+        cartId: String,
+        productId: String,
+        callback: (Boolean, String) -> Unit
+    )
+
     fun updateCart(
         cartId: String,
         data: MutableMap<String, Any>,
         callback: (Boolean, String) -> Unit
     )
+
+
 
     fun getCartById(
         cartId: String,
