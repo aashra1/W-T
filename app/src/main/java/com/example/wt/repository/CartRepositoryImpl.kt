@@ -38,7 +38,7 @@ class CartRepositoryImpl : CartRepository {
         productId: String,
         callback: (Boolean, String) -> Unit
     ) {
-        cartRef.child(cartId).removeValue().addOnCompleteListener {
+        cartRef.child(cartId).child("products").child(productId).removeValue().addOnCompleteListener {
             if(it.isSuccessful){
                 callback(true,"Product Removed from Cart successfully")
             } else{
@@ -102,5 +102,3 @@ class CartRepositoryImpl : CartRepository {
         })
     }
 }
-
-
