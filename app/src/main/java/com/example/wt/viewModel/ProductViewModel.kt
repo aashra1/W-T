@@ -18,7 +18,7 @@ class ProductViewModel(val repo : ProductRepository) {
     fun updateProduct(
         productId : String,
         data : MutableMap<String,Any>,
-                      callback: (Boolean, String) -> Unit
+        callback: (Boolean, String) -> Unit
     ){
         repo.updateProduct(productId,data,callback)
     }
@@ -37,7 +37,7 @@ class ProductViewModel(val repo : ProductRepository) {
 
     fun getProductById(productId: String, ){
         repo.getProductById(productId){
-            products,success,message ->
+                products,success,message ->
             if(success){
                 _products.value = products
             }
@@ -46,17 +46,21 @@ class ProductViewModel(val repo : ProductRepository) {
 
 
     var _allProducts = MutableLiveData<List<ProductModel>>()
-    var allproducts = MutableLiveData<List<ProductModel>>()
+    var allProducts = MutableLiveData<List<ProductModel>>()
         get() = _allProducts
 
     fun getAllProduct(){
         repo.getAllProduct{
-            products, sucess, message ->
+                products, sucess, message ->
             if(sucess){
                 _allProducts.value = products
             }
         }
     }
+
+    var _loading = MutableLiveData<Boolean>()
+    var loading = MutableLiveData<Boolean>()
+        get() = _loading
 
     fun uploadImage(context: Context, imageUri: Uri, callback: (String?) -> Unit){
         repo.uploadImage(context, imageUri, callback)
