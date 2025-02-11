@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wt.R
@@ -18,6 +19,7 @@ class ProductsAdapter(
     var data : ArrayList<ProductModel>
 ) : RecyclerView.Adapter<ProductsAdapter.ProductViewHolder>() {
     class ProductViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+        val loading : ProgressBar = itemView.findViewById(R.id.progressBar2)
         val pImage : ImageView = itemView.findViewById(R.id.displayImage)
         val bName : TextView = itemView.findViewById(R.id.displayBrandName)
         val pName : TextView = itemView.findViewById(R.id.displayProdName)
@@ -37,9 +39,9 @@ class ProductsAdapter(
         holder.pName.text = data[position].productName
         holder.pPrice.text = data[position].price.toString()
 
-        Picasso.get().load(data[position].productImage).into(holder.pImage,object: Callback {
+        Picasso.get().load(data[position].productImage).into(holder.pImage, object : Callback {
             override fun onSuccess() {
-                // holder.loading.visibility = View.GONE
+                holder.loading.visibility = View.GONE
             }
 
             override fun onError(e: Exception?) {
@@ -50,6 +52,16 @@ class ProductsAdapter(
 
     override fun getItemCount(): Int {
         return data.size
+    }
+
+    fun updateData(products: List<ProductModel>){
+        data.clear()
+        data.addAll(products)
+        notifyDataSetChanged()
+    }
+
+    fun getProductId(position: Int) : String{
+        return data[position].productId
     }
 
 }
