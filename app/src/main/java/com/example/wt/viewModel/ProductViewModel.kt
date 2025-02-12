@@ -54,6 +54,7 @@ class ProductViewModel(val repo : ProductRepository) {
                 products, sucess, message ->
             if(sucess){
                 _allProducts.value = products
+                _loading.value = false
             }
         }
     }

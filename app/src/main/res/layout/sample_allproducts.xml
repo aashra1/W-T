@@ -28,6 +28,7 @@
                 android:id="@+id/displayBrandName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Brand Name"
                 android:textStyle="bold"
                 android:textAlignment="center"/>
@@ -46,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="Price"
                 android:textStyle="bold"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="24dp"
                 android:textAlignment="center"/>
 
         </LinearLayout>
