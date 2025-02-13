@@ -37,7 +37,7 @@ class ProductsAdapter(
     override fun onBindViewHolder(holder: ProductsAdapter.ProductViewHolder, position: Int) {
         holder.bName.text = data[position].brandName
         holder.pName.text = data[position].productName
-        holder.pPrice.text = data[position].price.toString()
+        holder.pPrice.text = "Rs. ${data[position].price.toString()}"
 
         Picasso.get().load(data[position].productImage).into(holder.pImage, object : Callback {
             override fun onSuccess() {
