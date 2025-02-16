@@ -7,69 +7,112 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import com.example.wt.R
+import com.example.wt.databinding.FragmentAccountBinding
 import com.example.wt.login.activity.LoginActivity
 import com.example.wt.login.fragment.SignupFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AccountFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AccountFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    lateinit var binding: FragmentAccountBinding
+    lateinit var database: DatabaseReference
+    lateinit var auth: FirebaseAuth
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false)
+        binding = FragmentAccountBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val logPageButton: Button = view.findViewById(R.id.logBtn)
-        logPageButton.setOnClickListener {
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance().getReference("users")
+
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            fetchUserData(currentUser.uid)
+            // Disabling the button if the user is logged in
+            binding.logBtn.isClickable = false
+            binding.logBtn.isFocusable = false
+            binding.logBtn.visibility = View.GONE
+
+            binding.logoutBtn.visibility = View.VISIBLE
+            binding.logoutBar.visibility = View.VISIBLE
+            binding.logoutBtn.setOnClickListener {
+                signOutUser()
+            }
+
+        } else{
+            binding.logBtn.visibility = View.VISIBLE
+            binding.logBtn.setOnClickListener {
+                val intent = Intent(requireContext(), LoginActivity::class.java)
+                startActivity(intent)
+            }
+
+            binding.logoutBtn.visibility = View.GONE
+            binding.logoutBar.visibility = View.GONE
+        }
+
+    }
+
+    private fun signOutUser() {
+        auth.signOut()
+
+        Toast.makeText(requireContext(), "Successfully signed out", Toast.LENGTH_SHORT).show()
+
+        // Hiding log out button
+        binding.logoutBtn.visibility = View.GONE
+        binding.logoutBar.visibility = View.GONE
+
+        // Showing prev info
+        binding.userName.text = "Sign Up/Login"
+        binding.userEmail.text = "W&T Member"
+        binding.bottomTextView.visibility = View.VISIBLE
+
+        binding.userName.visibility = View.VISIBLE
+        binding.userEmail.visibility = View.VISIBLE
+        binding.bottomTextView.visibility = View.VISIBLE
+
+        // Enabling the button if the user is logged out
+        binding.logBtn.isClickable = true
+        binding.logBtn.isFocusable = true
+        binding.logBtn.visibility = View.VISIBLE
+
+        // Login button function
+        binding.logBtn.setOnClickListener {
             val intent = Intent(requireContext(), LoginActivity::class.java)
             startActivity(intent)
         }
+
     }
 
+    private fun fetchUserData(uid: String) {
+        database.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val name = snapshot.child("name").value?.toString() ?: "No Name"
+                val email = snapshot.child("email").value?.toString() ?: "No Email"
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AccountFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AccountFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+                binding.userName.text = name
+                binding.userEmail.text = email
+
+                binding.bottomTextView.visibility = View.GONE
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle errors if needed
+            }
+        })
     }
 }

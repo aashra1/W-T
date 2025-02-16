@@ -15,11 +15,20 @@ class UserViewModel(val repo : UserRepository) {
         repo.signup(email, password, callback)
     }
 
+    fun forgotpw(email: String,
+                 callback: (Boolean, String) -> Unit){
+        repo.forgotpw(email,callback)
+    }
+
     fun getCurrentUser(): FirebaseUser?{
         return repo.getCurrentUser()
     }
 
     fun addUserToDB(userId:String, userModel: UserModel, callback: (Boolean, String) -> Unit){
         return repo.addUserToDB(userId,userModel,callback)
+    }
+
+    fun signout() {
+        repo.signout()
     }
 }

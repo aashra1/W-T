@@ -1,5 +1,6 @@
 package com.example.wt.repository
 
+import android.util.Log
 import com.example.wt.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -37,6 +38,23 @@ class UserRepositoryImpl:UserRepository {
             }
     }
 
+    override fun forgotpw(email: String, callback: (Boolean, String) -> Unit) {
+        ref.orderByChild("email").equalTo(email).get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    auth.sendPasswordResetEmail(email).addOnCompleteListener {
+                        callback(it.isSuccessful, it.exception?.message ?: "Password reset email sent!")
+                    }
+                } else {
+                    callback(false, "Email not found in database!")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseError", "Error checking email: ${e.message}", e)
+                callback(false, "Error checking email: ${e.message}")
+            }
+    }
+
     override fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
     }
@@ -55,5 +73,9 @@ class UserRepositoryImpl:UserRepository {
             }
 
         }
+    }
+
+    override fun signout() {
+        auth.signOut()
     }
 }

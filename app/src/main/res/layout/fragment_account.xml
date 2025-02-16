@@ -44,8 +44,9 @@
         <Button
             android:id="@+id/logBtn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/grey"/>
+            android:layout_height="130dp"
+            app:cornerRadius="0dp"
+            android:backgroundTint="@android:color/transparent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,6 +54,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sign Up/Login"
@@ -63,6 +65,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/userEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="W&amp;T Member"
@@ -71,6 +74,7 @@
                 android:textColor="@color/tgrey"/>
 
             <TextView
+                android:id="@+id/bottomTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="90dp"
@@ -162,6 +166,50 @@
         android:layout_marginTop="25dp"
         android:layout_marginLeft="20dp"
         android:background="@color/grey" />
+
+    <LinearLayout
+        android:id="@+id/logoutBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="2dp"
+        android:paddingBottom="15dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/baseline_logout_24"
+            android:backgroundTint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="12dp"
+            android:text="LOG OUT"
+            android:textSize="20dp"
+            app:cornerRadius="0dp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
+
+    <!-- Add a horizontal line here -->
+    <View
+        android:id="@+id/logoutBar"
+        android:layout_width="370dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:background="@color/grey"
+        android:visibility="gone"/>
+
 
 
 

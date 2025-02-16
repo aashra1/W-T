@@ -16,6 +16,7 @@ import com.example.wt.repository.UserRepositoryImpl
 import com.example.wt.ui.activity.NavigationActivity
 import com.example.wt.ui.fragment.AccountFragment
 import com.example.wt.viewModel.UserViewModel
+import com.google.firebase.database.FirebaseDatabase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,15 +30,14 @@ private const val ARG_PARAM2 = "param2"
  */
 class LoginFragment : Fragment() {
 
-    private lateinit var binding : FragmentLoginBinding
+    lateinit var binding : FragmentLoginBinding
 
-    private lateinit var userViewModel: UserViewModel
+    lateinit var userViewModel: UserViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -45,8 +45,9 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val btnBack: ImageButton = requireActivity().findViewById(R.id.btnBack)
+        userViewModel = UserViewModel(UserRepositoryImpl())
 
+        val btnBack: ImageButton = requireActivity().findViewById(R.id.btnBack)
         btnBack.setOnClickListener {
             val intent = Intent(activity, NavigationActivity::class.java)
             startActivity(intent)
@@ -58,8 +59,26 @@ class LoginFragment : Fragment() {
             val password = binding.passwordInput1.text.toString()
 
             if (validateInputs(email, password)) {
-                // Proceed with login or API call
-                Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                loginUser(email, password)
+            }
+        }
+
+        binding.fpText.setOnClickListener {
+            val email = binding.emailInput1.text.toString()
+
+            if (email.isEmpty()) {
+                Toast.makeText(context, "Please enter your email!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(context, "Enter a valid email address!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Call forgot password function from ViewModel
+            userViewModel.forgotpw(email) { success, message ->
+                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -67,13 +86,39 @@ class LoginFragment : Fragment() {
         signupButton.setOnClickListener {
             // Replace the current fragment with SignupFragment
             parentFragmentManager.beginTransaction()
-                .replace(R.id.frameLayout, SignupFragment()) // Replace with your container ID
-                .addToBackStack(null) // Optional: Adds this transaction to the back stack
+                .replace(R.id.frameLayout, SignupFragment())
+                .addToBackStack(null)
                 .commit()
         }
     }
-    var repo = UserRepositoryImpl()
 
+    private fun loginUser(email: String, password: String) {
+        userViewModel.login(email, password) { success, message ->
+            if (success) {
+                checkUserExists()
+            } else {
+                Toast.makeText(context, "Login failed: $message", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun checkUserExists() {
+        val userId = userViewModel.getCurrentUser()?.uid ?: return
+
+        val databaseRef = FirebaseDatabase.getInstance().reference.child("users").child(userId)
+        databaseRef.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(requireContext(), NavigationActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            } else {
+                Toast.makeText(context, "User data not found in database.", Toast.LENGTH_LONG).show()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(context, "Error checking user data: ${it.message}", Toast.LENGTH_LONG).show()
+        }
+    }
 
     private fun validateInputs(email: String, password: String): Boolean {
         if (email.isEmpty()) {
