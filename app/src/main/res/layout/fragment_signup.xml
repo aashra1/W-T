@@ -142,11 +142,12 @@
     <Button
         android:id="@+id/signInbutton"
         android:layout_width="330dp"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:text="SIGN UP"
         android:layout_marginStart="28dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/signup_shape"/>
+        android:backgroundTint="@color/black"
+        app:cornerRadius="0dp"/>
 
 
 </LinearLayout>
