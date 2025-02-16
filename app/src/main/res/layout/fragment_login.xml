@@ -95,10 +95,11 @@
         <Button
             android:id="@+id/loginBtn"
             android:layout_width="330dp"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:text="LOGIN"
             android:textSize="18sp"
-            android:background="@drawable/login_shape"
+            android:backgroundTint="@color/black"
+            app:cornerRadius="0dp"
             android:layout_marginStart="28dp"
             android:layout_marginBottom="30dp"/>
 
@@ -122,11 +123,12 @@
         <Button
             android:id="@+id/signupBtn"
             android:layout_width="330dp"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:text="SIGN UP"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="18sp"
-            android:background="@drawable/signup_shape"
+            android:backgroundTint="@color/black"
+            app:cornerRadius="0dp"
             android:layout_marginStart="28dp"/>
 
 </LinearLayout>
