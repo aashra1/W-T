@@ -1,43 +1,20 @@
-package com.example.wt.viewModel
+package com.example.wt.viewmodel
 
-
-
-
-
-
-
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.wt.model.WishlistModel
 import com.example.wt.repository.WishlistRepository
+import kotlinx.coroutines.flow.Flow
 
-class WishlistViewModel : ViewModel() {
+class WishlistViewModel(val repo: WishlistRepository) {
 
-    private val repository = WishlistRepository()
-
-    private val _wishlist = MutableLiveData<List<WishlistModel>>()
-    val wishlist: LiveData<List<WishlistModel>> get() = _wishlist
-
-    private val _operationStatus = MutableLiveData<Boolean>()
-    val operationStatus: LiveData<Boolean> get() = _operationStatus
-
-    init {
-        fetchWishlist()
+    fun addToWishlist(wishlistModel: WishlistModel, callback: (Boolean, String) -> Unit) {
+        repo.addToWishlist(wishlistModel, callback)
     }
 
-    fun fetchWishlist() {
-        repository.getWishlist { items ->
-            _wishlist.value = items
-        }
+    fun removeFromWishlist(wishlistId: String, callback: (Boolean, String) -> Unit) {
+        repo.removeFromWishlist(wishlistId, callback)
     }
 
-    fun removeFromWishlist(productId: String) {
-        repository.removeFromWishlist(productId) { success ->
-            _operationStatus.value = success
-            if (success) {
-                fetchWishlist()
-            }
-        }
+    fun getWishlist(userId: String): Flow<List<WishlistModel>> {
+        return repo.getWishlist(userId)
     }
 }
