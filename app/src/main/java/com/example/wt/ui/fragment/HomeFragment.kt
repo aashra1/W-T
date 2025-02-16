@@ -46,6 +46,7 @@ class HomeFragment : Fragment() {
         val viewPager: ViewPager2 = view.findViewById(R.id.viewPager)
 
         val wishlistButton: ImageButton = view.findViewById(R.id.toolbar_star)
+        val searchButton: ImageButton = view.findViewById(R.id.toolbar_search)
 
         // Data for tab titles
         val data = arrayOf("FEATURED", "NEWARRIVALS")
@@ -62,6 +63,14 @@ class HomeFragment : Fragment() {
             val intent = Intent(requireContext(), WishlistActivity::class.java)
             startActivity(intent)
         }
+
+        searchButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(this.id, ShopFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
     }
 
 
