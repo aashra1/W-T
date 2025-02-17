@@ -7,6 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.WishlistActivity">
+
+    <!-- Header with Wishlist Title -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView6"
         android:layout_width="match_parent"
@@ -15,6 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -23,6 +26,7 @@
             android:textAlignment="center"
             android:textSize="25sp"
             android:textStyle="bold" />
+
         <ImageButton
             android:id="@+id/backBtn"
             android:layout_width="62dp"
@@ -33,16 +37,19 @@
             android:scaleType="fitCenter"
             android:src="@drawable/baseline_arrow_back_24" />
     </androidx.cardview.widget.CardView>
+
+    <!-- RecyclerView for displaying Wishlist items -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wishlistRecyclerview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        tools:listitem="@layout/sample_wishlist"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView6" />
+
+    <!-- Progress Bar for loading state -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"

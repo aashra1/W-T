@@ -1,5 +1,6 @@
 package com.example.wt.ui.fragment
 
+import WishlistViewModel
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,15 +12,16 @@ import com.example.wt.R
 import com.example.wt.adapter.CustProductsAdapter
 import com.example.wt.adapter.ProductsAdapter
 import com.example.wt.databinding.FragmentNewArrivalsBinding
+import com.example.wt.model.WishlistModel
 import com.example.wt.repository.ProductRepositoryImpl
+import com.example.wt.repository.WishlistRepositoryImpl
 import com.example.wt.viewModel.ProductViewModel
 
 class NewArrivalsFragment : Fragment() {
 
-    lateinit var binding : FragmentNewArrivalsBinding
-
+    lateinit var binding: FragmentNewArrivalsBinding
     lateinit var productViewModel: ProductViewModel
-
+    lateinit var wishlistViewModel: WishlistViewModel
     lateinit var adapter: CustProductsAdapter
 
     override fun onCreateView(
@@ -33,32 +35,28 @@ class NewArrivalsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var repo = ProductRepositoryImpl()
-        productViewModel = ProductViewModel(repo)
+        val productRepo = ProductRepositoryImpl()
+        val wishlistRepo = WishlistRepositoryImpl()
 
-        adapter = CustProductsAdapter(requireContext(), ArrayList())
+        productViewModel = ProductViewModel(productRepo)
+        wishlistViewModel = WishlistViewModel(wishlistRepo)
+
+        adapter = CustProductsAdapter(requireContext(), ArrayList(), wishlistViewModel)
 
         productViewModel.getAllProduct()
 
-        productViewModel.allProducts.observe(this){it->
-            it?.let {
+        // Use viewLifecycleOwner for observing LiveData in fragments
+        productViewModel.allProducts.observe(viewLifecycleOwner) { products ->
+            products?.let {
                 adapter.updateData(it)
             }
         }
 
-        productViewModel.loading.observe(this){loading->
-            if(loading){ // true
-                binding.newProgressBar.visibility = View.VISIBLE
-            }else{
-                binding.newProgressBar.visibility = View.GONE
-
-            }
+        productViewModel.loading.observe(viewLifecycleOwner) { loading ->
+            binding.newProgressBar.visibility = if (loading) View.VISIBLE else View.GONE
         }
 
         binding.newRecyclerView.adapter = adapter
         binding.newRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-
     }
-
 }

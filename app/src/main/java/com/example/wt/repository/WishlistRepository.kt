@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface WishlistRepository {
     fun addToWishlist(wishlistModel: WishlistModel, callback: (Boolean, String) -> Unit)
     fun removeFromWishlist(wishlistId: String, callback: (Boolean, String) -> Unit)
-    fun getWishlist(userId: String): Flow<List<WishlistModel>>
+    fun getWishlist(userId : String, callback: (Boolean, List<WishlistModel>?, String?) -> Unit)
 }

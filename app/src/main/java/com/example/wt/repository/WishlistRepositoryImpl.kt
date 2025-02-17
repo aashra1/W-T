@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.*
 
 class WishlistRepositoryImpl : WishlistRepository {
 
-    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    private val ref: DatabaseReference = database.reference.child("wishlist")
+    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    val ref: DatabaseReference = database.reference.child("wishlist")
 
     override fun addToWishlist(wishlistModel: WishlistModel, callback: (Boolean, String) -> Unit) {
         val wishlistId = ref.push().key ?: return callback(false, "Failed to generate ID")
@@ -25,26 +25,18 @@ class WishlistRepositoryImpl : WishlistRepository {
             .addOnFailureListener { callback(false, it.message ?: "Error removing from wishlist") }
     }
 
-    override fun getWishlist(userId: String): Flow<List<WishlistModel>> = callbackFlow {
+    override fun getWishlist(userId : String, callback: (Boolean, List<WishlistModel>?, String?) -> Unit) {
         val query = ref.orderByChild("userId").equalTo(userId)
-
-        val listener = object : ValueEventListener {
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val wishlist = snapshot.children.mapNotNull { it.getValue(WishlistModel::class.java) }
-                trySend(wishlist).isSuccess // Emit data to Flow
+                callback(true, wishlist, null)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("FirebaseError", "Error fetching wishlist: ${error.message}", error.toException())
-                close(error.toException()) // Close Flow on error
+                callback(false, null, error.message)
             }
-        }
-
-        query.addValueEventListener(listener)
-
-        awaitClose { query.removeEventListener(listener) } // Remove listener when Flow is closed
-    }.catch { e ->
-        Log.e("FirebaseError", "Error in wishlist flow: ${e.message}")
-        emit(emptyList()) // Emit empty list if there's an error
+        })
     }
+
 }
