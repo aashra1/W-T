@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,259 +8,52 @@
     android:background="@color/white"
     tools:context=".ui.fragment.CartFragment">
 
-    <ScrollView
+        <!-- Top -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:outlineAmbientShadowColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="CART"
+            android:textColor="@android:color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
-            <!-- Top -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:outlineAmbientShadowColor="@color/black">
+    </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="CART"
-                    android:textColor="@android:color/black"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
-                android:outlineAmbientShadowColor="@color/grey"
-                app:layout_constraintBottom_toTopOf="@+id/cardView2"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/cartRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:outlineAmbientShadowColor="@color/grey"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:listitem="@layout/sample_cart" />
-
-            </androidx.cardview.widget.CardView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cartRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:outlineAmbientShadowColor="@color/grey"
+        app:layout_constraintBottom_toTopOf="@+id/secureCheckoutButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        tools:listitem="@layout/sample_cart" />
 
 
-            <!-- Cart Id -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:outlineAmbientShadowColor="@color/grey"
-                app:layout_constraintBottom_toTopOf="@+id/cardView3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView5">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/TxtcartId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-                        android:text="Cart ID:"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/displayCartId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-                        android:text="cartId"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Country / Region -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView3"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginTop="1dp"
-                android:outlineAmbientShadowColor="@color/grey"
-                app:layout_constraintBottom_toTopOf="@+id/cardView4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView2">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/crTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp"
-                        android:text="COUNTRY/ \nREGION"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- Order -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:outlineAmbientShadowColor="@color/grey"
-                app:layout_constraintBottom_toTopOf="@+id/secureCheckoutButton"
-                app:layout_constraintTop_toBottomOf="@+id/cardView3">
+    <Button
+        android:id="@+id/secureCheckoutButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:padding="15dp"
+        android:text="SECURE CHECKOUT"
+        android:textColor="@android:color/white"
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="7dp"
-                        android:text="ORDER\nSUMMARY"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="132dp"
-                        android:layout_marginTop="15dp"
-                        android:text="BAG SUBTOTAL"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/displayBagSubtotal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="76dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="45dp"
-                        android:text="$2050"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView7"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="132dp"
-                        android:layout_marginTop="15dp"
-                        android:text="SHIPPING TOTAL"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-                    <TextView
-                        android:id="@+id/displayShippingTotal"
-                        android:layout_width="39dp"
-                        android:layout_height="18dp"
-                        android:layout_marginStart="71dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="45dp"
-                        android:text="$150"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView8"
-                        app:layout_constraintTop_toBottomOf="@+id/displayBagSubtotal" />
-
-                    <TextView
-                        android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="132dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:text="ORDER TOTAL"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-                    <TextView
-                        android:id="@+id/displayOrderTotal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="85dp"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="45dp"
-                        android:layout_marginBottom="15dp"
-                        android:text="$2200"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView9"
-                        app:layout_constraintTop_toBottomOf="@+id/displayShippingTotal" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <Button
-                android:id="@+id/secureCheckoutButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/black"
-                android:padding="15dp"
-                app:cornerRadius="0dp"
-                android:text="SECURE CHECKOUT"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView4" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

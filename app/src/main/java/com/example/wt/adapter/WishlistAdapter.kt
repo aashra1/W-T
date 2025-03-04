@@ -10,7 +10,9 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.wt.R
+import com.example.wt.model.ProductModel
 import com.example.wt.model.WishlistModel
 import com.example.wt.viewModel.UserViewModel
 import com.squareup.picasso.Callback
@@ -19,81 +21,55 @@ import java.lang.Exception
 
 class WishlistAdapter(
     var context: Context,
-    var data: ArrayList<WishlistModel>,
-    var wishlistViewModel: WishlistViewModel,
-    var userViewModel: UserViewModel
+    private val wishlistItems: List<WishlistModel>,
+    private val productMap: Map<String, ProductModel>,
+    private val onRemoveClick: (String) -> Unit
 ) : RecyclerView.Adapter<WishlistAdapter.WishlistViewHolder>() {
 
     class WishlistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val loading: ProgressBar = itemView.findViewById(R.id.progressBar4)
-        val pImage: ImageView = itemView.findViewById(R.id.wishDisplayImage)
-        val bName: TextView = itemView.findViewById(R.id.wishDisplayBrandName)
-        val pName: TextView = itemView.findViewById(R.id.wishDisplayProdName)
-        val pPrice: TextView = itemView.findViewById(R.id.wishDisplayPrice)
+        val productImage: ImageView = itemView.findViewById(R.id.wishlistProductImage)
+        val productName: TextView = itemView.findViewById(R.id.wishlistProductName)
+        val btnRemove: ImageView = itemView.findViewById(R.id.removeFromWishlist)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishlistViewHolder {
-        val itemView: View = LayoutInflater.from(context).inflate(R.layout.sample_wishlist, parent, false)
-        return WishlistViewHolder(itemView)
+        val view = LayoutInflater.from(context).inflate(R.layout.sample_wishlist, parent, false)
+        return WishlistViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: WishlistViewHolder, position: Int) {
+        val wishlistItem = wishlistItems[position]
+        val product = productMap[wishlistItem.productId]
 
-        val currentUser = userViewModel.getCurrentUser()
+        if (product != null) {
+            holder.loading.visibility = View.GONE
+            // Set product name
+            holder.productName.text = product.productName
 
-        if (currentUser == null) {
-            holder.bName.visibility = View.GONE
-            holder.pName.visibility = View.GONE
-            holder.pPrice.visibility = View.GONE
-            holder.pImage.visibility = View.GONE
+
+            // Load product image using Glide
+            Glide.with(context)
+                .load(product.productImage)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.error)
+                .into(holder.productImage)
+
+
         } else {
-            holder.bName.visibility = View.VISIBLE
-            holder.pName.visibility = View.VISIBLE
-            holder.pPrice.visibility = View.VISIBLE
-            holder.pImage.visibility = View.VISIBLE
-
-            val currentItem = data[position]
-
-            Log.d("WishlistAdapter", "Binding item at position $position: ${currentItem.productName}")
-
-            holder.bName.text = currentItem.brandName
-            holder.pName.text = currentItem.productName
-            holder.pPrice.text = "Rs. ${currentItem.price}"
-
-            // Load the product image using Picasso
-            Picasso.get().load(currentItem.productImage).into(holder.pImage, object : Callback {
-                override fun onSuccess() {
-                    holder.loading.visibility = View.GONE
-                }
-
-                override fun onError(e: Exception?) {
-                    holder.loading.visibility = View.GONE
-                }
-            })
-
-            // Optionally, allow users to add/remove from wishlist only if logged in
-            holder.itemView.setOnClickListener {
-                // Add or remove item from wishlist (or trigger an action)
-                // For example, adding the item to the user's wishlist
-                wishlistViewModel.addToWishlist(currentItem) { success, message ->
-                    if (success) {
-                        Log.d("WishlistAdapter", "Added to wishlist: ${currentItem.productName}")
-                    } else {
-                        Log.d("WishlistAdapter", "Error adding to wishlist: $message")
-                    }
-                }
-            }
+            holder.productName.text = "Unknown Product"
+            holder.productImage.setImageResource(R.drawable.placeholder)
+            holder.loading.visibility = View.VISIBLE
         }
+
+        // Set click listeners
+        holder.btnRemove.setOnClickListener {
+            wishlistItem.wishlistId?.let { onRemoveClick(it) }
+        }
+
+
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
+    override fun getItemCount(): Int = wishlistItems.size
 
-    fun updateData(newData: List<WishlistModel>) {
-        Log.d("WishlistAdapter", "Updating with data: ${newData.size}")
-        data.clear()
-        data.addAll(newData)
-        notifyDataSetChanged()
-    }
 }

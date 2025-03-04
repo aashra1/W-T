@@ -2,6 +2,8 @@ package com.example.wt.adapter
 
 import WishlistViewModel
 import android.content.Context
+import android.media.Image
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +22,9 @@ import java.lang.Exception
 class CustProductsAdapter(
     var context: Context,
     var data: ArrayList<ProductModel>,
-    var wishlistViewModel: WishlistViewModel
+    var wishlistViewModel: WishlistViewModel,
+    private val onAddToWishlistClick: (ProductModel)->Unit,
+    private val onAddToCartClick: (ProductModel)->Unit
 ) : RecyclerView.Adapter<CustProductsAdapter.CustProductViewHolder>() {
 
     class CustProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,6 +33,7 @@ class CustProductsAdapter(
         val bName: TextView = itemView.findViewById(R.id.newDisplayBrandName)
         val wish: ImageView = itemView.findViewById(R.id.WishImage)
         val wished: ImageView = itemView.findViewById(R.id.WishedImage1)
+        val cart: ImageView = itemView.findViewById(R.id.addToCart)
         val pName: TextView = itemView.findViewById(R.id.newDisplayProdName)
         val pPrice: TextView = itemView.findViewById(R.id.newDisplayPrice)
     }
@@ -63,22 +68,18 @@ class CustProductsAdapter(
             }
         })
 
-        // Handle adding to wishlist
         holder.wish.setOnClickListener {
-            val model = WishlistModel(
-                productId = product.productId,
-                productImage = product.productImage,
-                brandName = product.brandName,
-                productName = product.productName,
-                price = product.price
-            )
-            wishlistViewModel.addToWishlist(model) { success, message ->
-                if (success) {
-                    holder.wish.visibility = View.GONE
-                    holder.wished.visibility = View.VISIBLE
-                }
-            }
+            Log.d("WishlistDebug","Add to Wishlist click for product: ${product.productName}")
+            onAddToWishlistClick(product)
+            holder.wish.visibility = View.GONE
+            holder.wished.visibility = View.VISIBLE
         }
+
+        holder.cart.setOnClickListener{
+            Log.d("CartDebug", "Add to Cart clicked for product: ${product.productName}")
+            onAddToCartClick(product)
+        }
+
 
         // Handle removing from wishlist
         holder.wished.setOnClickListener {

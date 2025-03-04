@@ -1,82 +1,109 @@
 package com.example.wt.ui.activity
 
-import WishlistViewModel
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.activity.viewModels
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.wt.R
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.wt.adapter.WishlistAdapter
 import com.example.wt.databinding.ActivityWishlistBinding
 import com.example.wt.model.ProductModel
 import com.example.wt.model.WishlistModel
-import com.example.wt.repository.UserRepositoryImpl
-import com.example.wt.repository.WishlistRepository
+import com.example.wt.repository.ProductRepositoryImpl
 import com.example.wt.repository.WishlistRepositoryImpl
-import com.example.wt.ui.fragment.HomeFragment
-import com.example.wt.viewModel.UserViewModel
-import com.example.wt.viewModel.WishlistViewModelFactory
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import java.util.ArrayList
+import java.util.HashMap
 
 class WishlistActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityWishlistBinding
-    lateinit var adapter: WishlistAdapter
-    lateinit var wishlistViewModel: WishlistViewModel
-    lateinit var userViewModel: UserViewModel
+    private lateinit var binding: ActivityWishlistBinding
+    private lateinit var wishlistAdapter: WishlistAdapter
+    private lateinit var wishlistRepository: WishlistRepositoryImpl
+    private lateinit var productRepository: ProductRepositoryImpl
+
+    private var wishlistList = ArrayList<WishlistModel>()
+    private var productMap = HashMap<String, ProductModel>() // Maps productId to product details
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityWishlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize the repository and ViewModels
-        val repo = WishlistRepositoryImpl()
-        wishlistViewModel = WishlistViewModel(repo)
-        userViewModel = UserViewModel(UserRepositoryImpl())
+        wishlistRepository = WishlistRepositoryImpl()
+        productRepository = ProductRepositoryImpl()
+
+        setupRecyclerView()
+        fetchWishlistItems()
 
         // Set up the back button to navigate back
         binding.backBtn.setOnClickListener {
             val intent = Intent(this@WishlistActivity, NavigationActivity::class.java)
             startActivity(intent)
         }
+    }
 
-        // Initialize the adapter and set it to the RecyclerView
-        adapter = WishlistAdapter(this, ArrayList(), wishlistViewModel, userViewModel)
-        binding.wishlistRecyclerview.adapter = adapter
-        binding.wishlistRecyclerview.layoutManager = LinearLayoutManager(this)
+    private fun setupRecyclerView() {
+        wishlistAdapter = WishlistAdapter(this@WishlistActivity, wishlistList, productMap,
+            onRemoveClick = { wishlistId -> removeFromWishlist(wishlistId) }
+        )
 
-        // Observe the loading state to show/hide the ProgressBar
-        wishlistViewModel.loading.observe(this) { loading ->
-            binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+        val layoutManager = GridLayoutManager(this, 1)
+        layoutManager.isSmoothScrollbarEnabled = true
+
+        binding.wishlistRecyclerview.apply {
+            this.layoutManager = layoutManager
+            this.adapter = wishlistAdapter
+            this.setHasFixedSize(true)
+            this.itemAnimator = null
         }
+    }
 
-        wishlistViewModel.wishlistLiveData.observe(this) { wishlist ->
-            Log.d("WishlistActivity", "Wishlist data observed: ${wishlist.size}")
-            wishlist?.let {
-                if (it.isEmpty()) {
-                    Log.d("WishlistActivity", "Wishlist is empty")
-                } else {
-                    Log.d("WishlistActivity", "Wishlist size: ${it.size}")
-                    adapter.updateData(it)
+    private fun fetchWishlistItems() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val wishlistRef = FirebaseDatabase.getInstance().getReference("Wishlist").child(userId)
+
+        wishlistRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                wishlistList.clear()
+                for (itemSnapshot in snapshot.children) {
+                    val wishlistItem = itemSnapshot.getValue(WishlistModel::class.java)
+                    wishlistItem?.let { wishlistList.add(it) }
+                }
+                wishlistAdapter.notifyDataSetChanged()
+                fetchProductDetails()
+                binding.progressBar.visibility = View.GONE
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@WishlistActivity, "Failed to load wishlist items", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun fetchProductDetails() {
+        val productIds = wishlistList.map { it.productId }.toSet()
+
+        productIds.forEach { productId ->
+            productRepository.getProductById(productId) { product, success, _ ->
+                if (success && product != null) {
+                    productMap[productId] = product
+                    wishlistAdapter.notifyDataSetChanged()
                 }
             }
         }
+    }
 
-        // Get userId from Firebase Auth and fetch the wishlist
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        Log.d("WishlistActivity", "User ID: $userId")
-        if (!userId.isNullOrEmpty()) {
-            wishlistViewModel.getWishlist(userId)
-        } else {
-            Snackbar.make(binding.root, "Unable to Login", Snackbar.LENGTH_LONG)
-                .setAction("Ok") {}.show()
+    private fun removeFromWishlist(wishlistId: String) {
+        wishlistRepository.removeFromWishlist(wishlistId) { success, _ ->
+            if (success) {
+                Toast.makeText(this@WishlistActivity,"Removed from Wishlisht",Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

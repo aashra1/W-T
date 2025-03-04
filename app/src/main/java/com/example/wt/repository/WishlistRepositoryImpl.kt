@@ -25,6 +25,20 @@ class WishlistRepositoryImpl : WishlistRepository {
             .addOnFailureListener { callback(false, it.message ?: "Error removing from wishlist") }
     }
 
+    override fun updateWishlistItem(
+        wishlistId: String,
+        quantity: Int,
+        callback: (Boolean, String) -> Unit
+    ) {
+        ref.child(wishlistId).child("quantity").setValue(quantity).addOnCompleteListener {
+            if (it.isSuccessful) {
+                callback(true, "Wishlist updated")
+            } else {
+                callback(false, it.exception?.message.toString())
+            }
+        }
+    }
+
     override fun getWishlist(userId : String, callback: (Boolean, List<WishlistModel>?, String?) -> Unit) {
         val query = ref.orderByChild("userId").equalTo(userId)
         query.addListenerForSingleValueEvent(object : ValueEventListener {

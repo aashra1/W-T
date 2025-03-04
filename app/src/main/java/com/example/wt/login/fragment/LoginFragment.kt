@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.example.wt.R
 import com.example.wt.databinding.FragmentLoginBinding
 import com.example.wt.repository.UserRepositoryImpl
+import com.example.wt.ui.activity.AdminActivity
 import com.example.wt.ui.activity.NavigationActivity
 import com.example.wt.ui.fragment.AccountFragment
 import com.example.wt.viewModel.UserViewModel
@@ -60,6 +61,11 @@ class LoginFragment : Fragment() {
 
             if (validateInputs(email, password)) {
                 loginUser(email, password)
+            }
+
+            if(email == "wtadmin@gmail.com" && password == "wtAdmin@123"){
+                val intent = Intent(requireActivity(), AdminActivity::class.java)
+                startActivity(intent)
             }
         }
 
