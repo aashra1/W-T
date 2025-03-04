@@ -4,16 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.wt.R
 import com.example.wt.model.CartModel
 import com.example.wt.model.ProductModel
-import com.squareup.picasso.Picasso
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -22,7 +19,7 @@ class CartAdapter(
     private val cartItems: ArrayList<CartModel>,
     private val product: Map<String, ProductModel>,
     private val onRemoveClick: (String) -> Unit,
-    private val onQuantityChange: (String, Int) -> Unit
+    private val onQuantityChange: (String, Long) -> Unit // Changed to Long
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     class CartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -61,6 +58,7 @@ class CartAdapter(
                 .error(R.drawable.error)
                 .into(holder.productImage)
         } else {
+            holder.brandName.text = "Unknown Brand"
             holder.productName.text = "Unknown Product"
             holder.productImage.setImageResource(R.drawable.placeholder)
             holder.productPrice.text = "Price Unavailable"
@@ -77,14 +75,29 @@ class CartAdapter(
         holder.btnDecrease.setOnClickListener {
             val newQuantity = cartItem.quantity - 1
             if (newQuantity >= 1) {
+                // Update local data
+                cartItem.quantity = newQuantity
+                holder.productQuantity.text = newQuantity.toString() // Update UI immediately
+                notifyItemChanged(position) // Notify adapter of the change
+
+                // Update Firebase
                 onQuantityChange(cartItem.cartId, newQuantity)
             } else {
-                onRemoveClick(cartItem.cartId) // Auto-remove if quantity reaches 0
+                // Auto-remove if quantity reaches 0
+                onRemoveClick(cartItem.cartId)
             }
         }
 
         holder.btnIncrease.setOnClickListener {
-            onQuantityChange(cartItem.cartId, cartItem.quantity + 1)
+            val newQuantity = cartItem.quantity + 1
+
+            // Update local data
+            cartItem.quantity = newQuantity
+            holder.productQuantity.text = newQuantity.toString() // Update UI immediately
+            notifyItemChanged(position) // Notify adapter of the change
+
+            // Update Firebase
+            onQuantityChange(cartItem.cartId, newQuantity)
         }
     }
 

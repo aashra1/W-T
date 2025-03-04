@@ -12,7 +12,6 @@ data class ProductModel(
     var brandName : String = "",
     var productName : String = "",
     var price : Int = 0,
-    var size : String = "",
     var quantity : Int = 0
 ) : Parcelable  {
     constructor(parcel: Parcel) : this(
@@ -21,7 +20,6 @@ data class ProductModel(
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readInt()?:0,
-        parcel.readString()?:"",
         parcel.readInt()?:0
     )
 
@@ -35,7 +33,6 @@ data class ProductModel(
         parcel.writeString(brandName)
         parcel.writeString(productName)
         parcel.writeInt(price)
-        parcel.writeString(size)
         parcel.writeInt(quantity)
     }
 

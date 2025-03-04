@@ -12,7 +12,7 @@ data class CartModel(
     var brandName : String = "",
     var productName: String = "",
     var price : Int = 0,
-    var quantity : Int = 1
+    var quantity: Long = 1,
 
 ) : Parcelable{
     constructor(parcel: Parcel) : this(
@@ -23,7 +23,7 @@ data class CartModel(
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readInt()?:0,
-        parcel.readInt()?:0
+        parcel.readLong()?:0
     ) {
     }
 
@@ -35,7 +35,7 @@ data class CartModel(
         parcel.writeString(brandName)
         parcel.writeString(productName)
         parcel.writeInt(price)
-        parcel.writeInt(quantity)
+        parcel.writeLong(quantity)
     }
 
     override fun describeContents(): Int {

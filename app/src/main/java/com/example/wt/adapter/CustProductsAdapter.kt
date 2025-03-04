@@ -2,7 +2,6 @@ package com.example.wt.adapter
 
 import WishlistViewModel
 import android.content.Context
-import android.media.Image
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,19 +11,16 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wt.R
-import com.example.wt.adapter.ProductsAdapter.ProductViewHolder
 import com.example.wt.model.ProductModel
-import com.example.wt.model.WishlistModel
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import java.lang.Exception
 
 class CustProductsAdapter(
     var context: Context,
     var data: ArrayList<ProductModel>,
     var wishlistViewModel: WishlistViewModel,
-    private val onAddToWishlistClick: (ProductModel)->Unit,
-    private val onAddToCartClick: (ProductModel)->Unit
+    private val onAddToWishlistClick: (ProductModel) -> Unit,
+    private val onAddToCartClick: (ProductModel) -> Unit
 ) : RecyclerView.Adapter<CustProductsAdapter.CustProductViewHolder>() {
 
     class CustProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -43,21 +39,15 @@ class CustProductsAdapter(
         return CustProductViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
     override fun onBindViewHolder(holder: CustProductViewHolder, position: Int) {
         val product = data[position]
 
+        // Bind data to views
         holder.bName.text = product.brandName
         holder.pName.text = product.productName
         holder.pPrice.text = "Rs. ${product.price}"
 
-        val wished = holder.wished
-        val wish = holder.wish
-
-        // Load product image
+        // Load product image using Picasso
         Picasso.get().load(product.productImage).into(holder.pImage, object : Callback {
             override fun onSuccess() {
                 holder.loading.visibility = View.GONE
@@ -68,18 +58,19 @@ class CustProductsAdapter(
             }
         })
 
+        // Handle wishlist button clicks
         holder.wish.setOnClickListener {
-            Log.d("WishlistDebug","Add to Wishlist click for product: ${product.productName}")
+            Log.d("WishlistDebug", "Add to Wishlist click for product: ${product.productName}")
             onAddToWishlistClick(product)
             holder.wish.visibility = View.GONE
             holder.wished.visibility = View.VISIBLE
         }
 
-        holder.cart.setOnClickListener{
+        // Handle cart button clicks
+        holder.cart.setOnClickListener {
             Log.d("CartDebug", "Add to Cart clicked for product: ${product.productName}")
             onAddToCartClick(product)
         }
-
 
         // Handle removing from wishlist
         holder.wished.setOnClickListener {
@@ -90,6 +81,10 @@ class CustProductsAdapter(
                 }
             }
         }
+    }
+
+    override fun getItemCount(): Int {
+        return data.size
     }
 
     // Method to update data in the adapter

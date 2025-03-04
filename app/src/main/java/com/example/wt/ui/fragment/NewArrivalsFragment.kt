@@ -2,16 +2,16 @@ package com.example.wt.ui.fragment
 
 import WishlistViewModel
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.wt.R
 import com.example.wt.adapter.CustProductsAdapter
-import com.example.wt.adapter.ProductsAdapter
 import com.example.wt.databinding.FragmentNewArrivalsBinding
 import com.example.wt.model.CartModel
 import com.example.wt.model.ProductModel
@@ -21,13 +21,14 @@ import com.example.wt.repository.WishlistRepositoryImpl
 import com.example.wt.viewModel.ProductViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import android.graphics.Rect // Add this import
 
 class NewArrivalsFragment : Fragment() {
 
     lateinit var binding: FragmentNewArrivalsBinding
     lateinit var productViewModel: ProductViewModel
     lateinit var wishlistViewModel: WishlistViewModel
-    lateinit var adapter: CustProductsAdapter
+    private lateinit var adapter: CustProductsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,29 +41,44 @@ class NewArrivalsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize repositories and ViewModels
         val productRepo = ProductRepositoryImpl()
         val wishlistRepo = WishlistRepositoryImpl()
 
         productViewModel = ProductViewModel(productRepo)
         wishlistViewModel = WishlistViewModel(wishlistRepo)
 
-        adapter = CustProductsAdapter(requireContext(), ArrayList(), wishlistViewModel, { product -> addToWishlist(product) }, { product -> addToCart(product) })
+        // Initialize adapter with an empty list
+        adapter = CustProductsAdapter(
+            context = requireContext(),
+            data = ArrayList(),
+            wishlistViewModel = wishlistViewModel,
+            onAddToWishlistClick = { product -> addToWishlist(product) },
+            onAddToCartClick = { product -> addToCart(product) }
+        )
 
+        // Set up RecyclerView with GridLayoutManager
+        val gridLayoutManager = GridLayoutManager(requireContext(), 2) // 2 columns
+        binding.newRecyclerView.adapter = adapter
+        binding.newRecyclerView.layoutManager = gridLayoutManager
+
+        // Fetch products from Firebase
         productViewModel.getAllProduct()
 
-        // Use viewLifecycleOwner for observing LiveData in fragments
+        // Observe product data
         productViewModel.allProducts.observe(viewLifecycleOwner) { products ->
-            products?.let {
-                adapter.updateData(it)
+            if (products != null && products.isNotEmpty()) {
+                adapter.updateData(products) // Update adapter with new data
+            } else {
+                // Handle empty or null data
+                Toast.makeText(requireContext(), "No products found", Toast.LENGTH_SHORT).show()
             }
         }
 
+        // Observe loading state
         productViewModel.loading.observe(viewLifecycleOwner) { loading ->
             binding.newProgressBar.visibility = if (loading) View.VISIBLE else View.GONE
         }
-
-        binding.newRecyclerView.adapter = adapter
-        binding.newRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun addToWishlist(product: ProductModel) {
@@ -79,60 +95,90 @@ class NewArrivalsFragment : Fragment() {
                 .addOnSuccessListener { snapshot ->
                     if (snapshot.exists()) {
                         Toast.makeText(requireContext(), "Already in Wishlist", Toast.LENGTH_SHORT).show()
-                        println("DEBUG: Item already exists in Wishlist")
                     } else {
                         val wishlistId = System.currentTimeMillis().toString()
                         val newWishlistItem = WishlistModel(
                             wishlistId = wishlistId,
                             productId = productId,
+                            brandName = product.brandName?: "Unknown",
                             productName = product.productName ?: "Unknown",
-                            productImage = product.productImage ?: "",
+                            productImage = product.productImage ?: ""
                         )
 
                         wishlistRef.child(wishlistId).setValue(newWishlistItem)
                             .addOnSuccessListener {
                                 Toast.makeText(requireContext(), "Added to Wishlist", Toast.LENGTH_SHORT).show()
-                                println("DEBUG: Successfully added to Wishlist")
                             }
                             .addOnFailureListener { e ->
                                 Toast.makeText(requireContext(), "Failed to add to Wishlist", Toast.LENGTH_SHORT).show()
-                                println("DEBUG: Error adding to Wishlist: ${e.message}")
+                                Log.e("NewArrivalsFragment", "Error adding to Wishlist: ${e.message}")
                             }
                     }
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(requireContext(), "Failed to check Wishlist", Toast.LENGTH_SHORT).show()
-                    println("DEBUG: Error checking Wishlist: ${e.message}")
+                    Log.e("NewArrivalsFragment", "Error checking Wishlist: ${e.message}")
                 }
         }
     }
 
     private fun addToCart(product: ProductModel) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
-        val cartRef = FirebaseDatabase.getInstance().getReference("Cart").child(userId ?: return)
+        if (userId == null) {
+            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        product.productId?.let { productId ->  // Ensure productId is non-null
-            cartRef.child(productId).get().addOnSuccessListener { snapshot ->
-                if (snapshot.exists()) {
-                    val existingCartItem = snapshot.getValue(CartModel::class.java)
-                    val updatedQuantity = (existingCartItem?.quantity ?: 0) + 1
+        val productId = product.productId
+        if (productId == null) {
+            Toast.makeText(requireContext(), "Product ID is missing", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val cartRef = FirebaseDatabase.getInstance().getReference("Cart").child(userId)
+
+        cartRef.child(productId).get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                // Update quantity if the item already exists
+                val existingCartItem = snapshot.getValue(CartModel::class.java)
+                if (existingCartItem != null) {
+                    val updatedQuantity = (existingCartItem.quantity ?: 0) + 1
                     cartRef.child(productId).child("quantity").setValue(updatedQuantity)
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Cart quantity updated", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(requireContext(), "Failed to update cart quantity", Toast.LENGTH_SHORT).show()
+                            Log.e("NewArrivalsFragment", "Error updating cart quantity: ${e.message}")
+                        }
                 } else {
-                    val newCartItem = CartModel(
-                        userId = userId,
-                        cartId = System.currentTimeMillis().toString(),
-                        productId = productId,
-                        productName = product.productName ?: "Unknown",
-                        productImage = product.productImage ?: "",
-                        price = product.price ?: 0,
-                        quantity = 1
-                    )
-                    cartRef.child(productId).setValue(newCartItem)
+                    Toast.makeText(requireContext(), "Invalid cart item data", Toast.LENGTH_SHORT).show()
+                    Log.e("NewArrivalsFragment", "Existing cart item data does not match CartModel")
                 }
-                Toast.makeText(requireContext(), "Added to cart", Toast.LENGTH_SHORT).show()
-            }.addOnFailureListener {
-                Toast.makeText(requireContext(), "Failed to add to cart", Toast.LENGTH_SHORT).show()
+            } else {
+                // Add new item to cart
+                val newCartItem = CartModel(
+                    userId = userId,
+                    cartId = System.currentTimeMillis().toString(),
+                    productId = productId,
+                    brandName = product.brandName?: "Unknown",
+                    productName = product.productName ?: "Unknown",
+                    productImage = product.productImage ?: "",
+                    price = product.price ?: 0,
+                    quantity = 1
+                )
+                cartRef.child(productId).setValue(newCartItem)
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Added to cart", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(requireContext(), "Failed to add to cart", Toast.LENGTH_SHORT).show()
+                        Log.e("NewArrivalsFragment", "Error adding to cart: ${e.message}")
+                    }
             }
+        }.addOnFailureListener { e ->
+            Toast.makeText(requireContext(), "Failed to check cart", Toast.LENGTH_SHORT).show()
+            Log.e("NewArrivalsFragment", "Error checking cart: ${e.message}")
         }
     }
 }

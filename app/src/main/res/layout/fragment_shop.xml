@@ -28,8 +28,11 @@
             android:layout_height="40dp"
             android:layout_marginLeft="31dp"
             android:layout_marginTop="70dp"
-            android:background="@color/bgrey" />
-
+            android:padding="10dp"
+            android:background="@color/bgrey"
+            android:hint="Search products..."
+            android:inputType="text"
+            android:completionThreshold="1" />
 
     </androidx.cardview.widget.CardView>
 
@@ -37,6 +40,5 @@
         android:id="@+id/shopRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
 
 </LinearLayout>

@@ -99,11 +99,17 @@ class LoginFragment : Fragment() {
     }
 
     private fun loginUser(email: String, password: String) {
-        userViewModel.login(email, password) { success, message ->
-            if (success) {
-                checkUserExists()
-            } else {
-                Toast.makeText(context, "Login failed: $message", Toast.LENGTH_LONG).show()
+        if(email == "wtadmin@gmail.com" && password == "wtAdmin@123"){
+            Toast.makeText(requireActivity(),"Welcome to Admin Page",Toast.LENGTH_SHORT).show()
+            val intent = Intent(requireActivity(), AdminActivity::class.java)
+            startActivity(intent)
+        } else {
+            userViewModel.login(email, password) { success, message ->
+                if (success) {
+                    checkUserExists()
+                } else {
+                    Toast.makeText(context, "Login failed: $message", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
