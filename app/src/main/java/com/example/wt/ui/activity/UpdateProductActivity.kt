@@ -65,7 +65,7 @@ class UpdateProductActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         }
 
         // Add click listener to the Update Product button
-        binding.addProductButton.setOnClickListener {
+        binding.updateProductButton.setOnClickListener {
             updateProduct()
         }
     }

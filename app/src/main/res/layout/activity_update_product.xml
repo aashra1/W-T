@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:padding="15dp"
-                        android:background="@android:drawable/editbox_background" />
+                        android:background="@android:drawable/spinner_background" />
 
                     <!-- Product Details Layout -->
                     <LinearLayout
@@ -158,7 +158,7 @@
 
                         <!-- Add Product Button -->
                         <Button
-                            android:id="@+id/addProductButton"
+                            android:id="@+id/updateProductButton"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
                             android:layout_marginTop="30dp"
