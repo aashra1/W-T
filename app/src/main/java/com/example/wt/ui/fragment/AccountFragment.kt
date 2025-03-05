@@ -12,6 +12,8 @@ import com.example.wt.R
 import com.example.wt.databinding.FragmentAccountBinding
 import com.example.wt.login.activity.LoginActivity
 import com.example.wt.login.fragment.SignupFragment
+import com.example.wt.ui.activity.ContactUsActivity
+import com.example.wt.ui.activity.FaqActivity
 import com.example.wt.ui.activity.OrderActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -40,6 +42,16 @@ class AccountFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().getReference("users")
+
+        binding.contactBtn.setOnClickListener{
+            val intent = Intent(requireActivity(), ContactUsActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.faqBtn.setOnClickListener{
+            val intent = Intent(requireActivity(), FaqActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.ordersBtn.setOnClickListener {
             val currentUser = auth.currentUser
