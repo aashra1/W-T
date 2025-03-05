@@ -1,7 +1,7 @@
 package com.example.wt
 
 
-import com.example.wt.repository.UserAuthRepoImpl
+import com.example.wt.repository.AuthRepoImpl
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -18,14 +18,14 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 
 
-class UserAuthUniTest {
+class AuthUniTest {
     @Mock
     private lateinit var mockAuth: FirebaseAuth
 
     @Mock
     private lateinit var mockTask: Task<AuthResult>
 
-    private lateinit var AuthUserRepo: UserAuthRepoImpl
+    private lateinit var authRepo: AuthRepoImpl
 
     @Captor
     private lateinit var captor: ArgumentCaptor<OnCompleteListener<AuthResult>>
@@ -33,17 +33,17 @@ class UserAuthUniTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        AuthUserRepo = UserAuthRepoImpl(mockAuth)
+        authRepo = AuthRepoImpl(mockAuth)
     }
     @Test
-    fun testRegister_Successful() {
+    fun testLogin_Successful() {
         val email = "test@example.com"
         val password = "testPassword"
         var expectedResult = "Initial Value" // Define the initial value
 
         // Mocking task to simulate successful registration
         `when`(mockTask.isSuccessful).thenReturn(true)
-        `when`(mockAuth.createUserWithEmailAndPassword(any(), any()))
+        `when`(mockAuth.signInWithEmailAndPassword(any(), any()))
             .thenReturn(mockTask)
 
         // Define a callback that updates the expectedResult
@@ -52,12 +52,12 @@ class UserAuthUniTest {
         }
 
         // Call the function under test
-        AuthUserRepo.signup(email, password, callback)
+        authRepo.login(email, password, callback)
 
         verify(mockTask).addOnCompleteListener(captor.capture())
         captor.value.onComplete(mockTask)
 
         // Assert the result
-        assertEquals("Registration Successful", expectedResult)
+        assertEquals("Login Successfull", expectedResult)
     }
 }

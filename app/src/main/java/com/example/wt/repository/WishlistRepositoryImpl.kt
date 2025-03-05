@@ -6,7 +6,7 @@ import com.google.firebase.database.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 
-class WishlistRepositoryImpl : WishlistRepository {
+class ishlistRepositoryImpl : WishlistRepository {
 
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val ref: DatabaseReference = database.reference.child("wishlist")
