@@ -59,4 +59,9 @@ dependencies {
     implementation("com.squareup.picasso:picasso:2.8")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+    testImplementation("org.mockito:mockito-core:5.6.0")
+    testImplementation("org.mockito:mockito-inline:3.12.4")
+    androidTestImplementation("org.mockito:mockito-kotlin:3.2.0")
+
 }
