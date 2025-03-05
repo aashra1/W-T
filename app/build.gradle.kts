@@ -66,4 +66,9 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
     implementation("androidx.drawerlayout:drawerlayout:1.1.1")
     implementation("com.google.android.material:material:1.4.0")
+
+    testImplementation("org.mockito:mockito-core:5.6.0")
+    testImplementation("org.mockito:mockito-inline:3.12.4")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+
 }
