@@ -5,100 +5,59 @@ import com.google.firebase.database.*
 
 class CartRepositoryImpl : CartRepository {
 
-    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    private val cartRef: DatabaseReference = database.reference.child("carts")
+    val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    val ref: DatabaseReference = database.reference.child("carts")
 
     override fun addToCart(cartModel: CartModel, callback: (Boolean, String) -> Unit) {
-        val cartId = cartRef.push().key ?: return callback(false, "Failed to generate cart ID")
+        val cartId = ref.push().key ?: return callback(false, "Failed to generate cart ID")
         cartModel.cartId = cartId
 
-        cartRef.child(cartId).setValue(cartModel).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                callback(true, "Item added to cart successfully")
+        ref.child(cartId).setValue(cartModel).addOnCompleteListener {
+            if (it.isSuccessful) {
+                callback(true, "Added to cart")
             } else {
-                callback(false, task.exception?.message ?: "Error adding item to cart")
+                callback(false, it.exception?.message.toString())
             }
         }
     }
 
-
-
-    override fun deleteCart(cartId: String, callback: (Boolean, String) -> Unit) {
-        cartRef.child(cartId).removeValue().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                callback(true, "Item removed from cart successfully")
+    override fun removeFromCart(cartId: String, callback: (Boolean, String) -> Unit) {
+        ref.child(cartId).removeValue().addOnCompleteListener {
+            if (it.isSuccessful) {
+                callback(true, "Removed from cart")
             } else {
-                callback(false, task.exception?.message ?: "Error removing item from cart")
+                callback(false, it.exception?.message.toString())
             }
         }
     }
 
-    override fun deleteProductInCart(
-        cartId: String,
-        productId: String,
-        callback: (Boolean, String) -> Unit
-    ) {
-        cartRef.child(cartId).child("products").child(productId).removeValue().addOnCompleteListener {
-            if(it.isSuccessful){
-                callback(true,"Product Removed from Cart successfully")
-            } else{
-                callback(false,it.exception?.message?:"Unknown error")
-            }
-        }
-    }
-
-    override fun updateCart(
-        cartId: String,
-        data: MutableMap<String, Any>,
-        callback: (Boolean, String) -> Unit
-    ) {
-        cartRef.child(cartId).updateChildren(data).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                callback(true, "Cart updated successfully")
+    override fun updateCartItem(cartId: String, quantity: Int, callback: (Boolean, String) -> Unit) {
+        ref.child(cartId).child("quantity").setValue(quantity).addOnCompleteListener {
+            if (it.isSuccessful) {
+                callback(true, "Cart updated")
             } else {
-                callback(false, task.exception?.message ?: "Error updating cart")
+                callback(false, it.exception?.message.toString())
             }
         }
     }
 
-
-    override fun getCartById(cartId: String, callback: (CartModel?, Boolean, String) -> Unit) {
-        cartRef.child(cartId).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    val cartModel = snapshot.getValue(CartModel::class.java)
-                    callback(cartModel, true, "Cart item fetched successfully")
-                } else {
-                    callback(null, false, "Cart item not found")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                callback(null, false, error.message)
-            }
-        })
-    }
-
-    override fun getAllCart(callback: (List<CartModel>?, Boolean, String) -> Unit) {
-        cartRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val cartList = mutableListOf<CartModel>()
-                if (snapshot.exists()) {
-                    for (cartSnapshot in snapshot.children) {
-                        val cartItem = cartSnapshot.getValue(CartModel::class.java)
+    override fun getCartItems(userId: String, callback: (List<CartModel>?, Boolean, String) -> Unit) {
+        ref.orderByChild("userId").equalTo(userId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val cartItems = mutableListOf<CartModel>()
+                    for (item in snapshot.children) {
+                        val cartItem = item.getValue(CartModel::class.java)
                         if (cartItem != null) {
-                            cartList.add(cartItem)
+                            cartItems.add(cartItem)
                         }
                     }
-                    callback(cartList, true, "All cart items fetched successfully")
-                } else {
-                    callback(emptyList(), false, "No items found in the cart")
+                    callback(cartItems, true, "Cart items fetched")
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                callback(null, false, error.message)
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    callback(null, false, error.message)
+                }
+            })
     }
 }

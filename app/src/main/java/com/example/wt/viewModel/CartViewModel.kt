@@ -1,5 +1,6 @@
 package com.example.wt.viewModel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.wt.model.CartModel
@@ -8,54 +9,59 @@ import com.example.wt.repository.CartRepository
 class CartViewModel(private val repo: CartRepository) : ViewModel() {
 
 
-    private val _cart = MutableLiveData<CartModel>()
-    val cart: MutableLiveData<CartModel> get() = _cart
+    private val _cartItems = MutableLiveData<List<CartModel>?>()
+    val cartItems: LiveData<List<CartModel>?> get() = _cartItems
 
+    private val _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean> get() = _loading
 
-    private val _allCartItems = MutableLiveData<List<CartModel>>()
-    val allCartItems: MutableLiveData<List<CartModel>> get() = _allCartItems
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> get() = _errorMessage
 
-
-    fun addToCart(cartModel: CartModel, callback: (Boolean, String) -> Unit) {
+    fun addToCart(cartModel: CartModel) {
+        _loading.value = true
         repo.addToCart(cartModel) { success, message ->
-            callback(success, message)
-        }
-    }
-
-
-    fun deleteCart(cartId: String, callback: (Boolean, String) -> Unit) {
-        repo.deleteCart(cartId) { success, message ->
-            callback(success, message)
-        }
-    }
-
-
-    fun updateCart(cartId: String, data: MutableMap<String, Any>, callback: (Boolean, String) -> Unit) {
-        repo.updateCart(cartId, data) { success, message ->
-            callback(success, message)
-        }
-    }
-
-
-    fun getCartById(cartId: String) {
-        repo.getCartById(cartId) { cartItem, success, message ->
+            _loading.value = false
             if (success) {
-                _cart.value = cartItem
+                getCartItems(cartModel.userId)
             } else {
-                // Handle the error case if needed
-                _cart.value = null
+                _errorMessage.value = message
             }
         }
     }
 
-
-    fun getAllCart() {
-        repo.getAllCart { cartList, success, message ->
+    fun removeFromCart(cartId: String, userId: String) {
+        _loading.value = true
+        repo.removeFromCart(cartId) { success, message ->
+            _loading.value = false
             if (success) {
-                _allCartItems.value = cartList
+                getCartItems(userId)
             } else {
-                // Handle the error case if needed
-                _allCartItems.value = emptyList()
+                _errorMessage.value = message
+            }
+        }
+    }
+
+    fun updateCartItem(cartId: String, quantity: Int, userId: String) {
+        _loading.value = true
+        repo.updateCartItem(cartId, quantity) { success, message ->
+            _loading.value = false
+            if (success) {
+                getCartItems(userId)
+            } else {
+                _errorMessage.value = message
+            }
+        }
+    }
+
+    fun getCartItems(userId: String) {
+        _loading.value = true
+        repo.getCartItems(userId) { cartItems, success, message ->
+            _loading.value = false
+            if (success) {
+                _cartItems.value = cartItems
+            } else {
+                _errorMessage.value = message
             }
         }
     }

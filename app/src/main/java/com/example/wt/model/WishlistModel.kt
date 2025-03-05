@@ -5,11 +5,11 @@ import android.os.Parcelable
 
 data class WishlistModel(
     var wishlistId : String = "",
+    var userId : String = "",
     var productId : String = "",
     var productImage : String = "",
     var brandName : String = "",
     var productName : String = "",
-    var price : Int = 0,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()?:"",
@@ -17,7 +17,7 @@ data class WishlistModel(
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readString()?:"",
-        parcel.readInt()?:0
+        parcel.readString()?:"",
     )
 
     override fun describeContents(): Int {
@@ -26,11 +26,11 @@ data class WishlistModel(
 
     override fun writeToParcel(parcel: Parcel, p1: Int) {
         parcel.writeString(wishlistId)
+        parcel.writeString(userId)
         parcel.writeString(productId)
         parcel.writeString(productImage)
         parcel.writeString(brandName)
         parcel.writeString(productName)
-        parcel.writeInt(price)
     }
 
     companion object CREATOR : Parcelable.Creator<WishlistModel> {

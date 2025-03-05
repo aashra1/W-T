@@ -5,37 +5,11 @@ import com.example.wt.model.CartModel
 
 interface CartRepository {
 
-    fun addToCart(
-        cartModel: CartModel,
-        callback: (Boolean, String) -> Unit
+    fun addToCart(cartModel: CartModel, callback: (Boolean, String) -> Unit)
 
-    )
+    fun removeFromCart(cartId: String, callback: (Boolean, String) -> Unit)
 
-    fun deleteCart(
-        cartId: String,
-        callback: (Boolean, String) -> Unit
-    )
+    fun updateCartItem(cartId: String, quantity: Int, callback: (Boolean, String) -> Unit)
 
-    fun deleteProductInCart(
-        cartId: String,
-        productId: String,
-        callback: (Boolean, String) -> Unit
-    )
-
-    fun updateCart(
-        cartId: String,
-        data: MutableMap<String, Any>,
-        callback: (Boolean, String) -> Unit
-    )
-
-
-
-    fun getCartById(
-        cartId: String,
-        callback: (CartModel?, Boolean, String) -> Unit
-    )
-
-    fun getAllCart(
-        callback: (List<CartModel>?, Boolean, String) -> Unit
-    )
+    fun getCartItems(userId: String, callback: (List<CartModel>?, Boolean, String) -> Unit)
 }

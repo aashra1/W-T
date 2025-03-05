@@ -5,7 +5,6 @@ import android.os.Parcelable
 
 
 data class CartModel(
-
     var cartId : String = "",
     var userId : String = "",
     var productId: String = "",
@@ -13,8 +12,7 @@ data class CartModel(
     var brandName : String = "",
     var productName: String = "",
     var price : Int = 0,
-    var size : String = "",
-    var quantity : Int = 0
+    var quantity: Long = 1,
 
 ) : Parcelable{
     constructor(parcel: Parcel) : this(
@@ -25,8 +23,7 @@ data class CartModel(
         parcel.readString()?:"",
         parcel.readString()?:"",
         parcel.readInt()?:0,
-        parcel.readString()?:"",
-        parcel.readInt()?:0
+        parcel.readLong()?:0
     ) {
     }
 
@@ -38,8 +35,7 @@ data class CartModel(
         parcel.writeString(brandName)
         parcel.writeString(productName)
         parcel.writeInt(price)
-        parcel.writeString(size)
-        parcel.writeInt(quantity)
+        parcel.writeLong(quantity)
     }
 
     override fun describeContents(): Int {
